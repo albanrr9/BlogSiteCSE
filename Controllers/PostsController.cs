@@ -24,7 +24,7 @@ namespace BlogSite.Controllers
         }
 
         // GET: Posts
-        public async Task<IActionResult> Index(string searchQuery)
+        public async Task<IActionResult> Index(string searchQuery,int page=1,int pageSize = 10)
         {
             var postsQuery = _context.Posts
                 .Include(p => p.Author)
@@ -40,7 +40,15 @@ namespace BlogSite.Controllers
                 p.Category.Name.Contains(searchQuery));
             }
 
-            var posts = await postsQuery.ToListAsync();
+            var totalPosts = await postsQuery.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalPosts / (double)pageSize);
+            var posts = await postsQuery.Skip((page-1) * pageSize).Take(pageSize).ToListAsync();
+
+            ViewData["Currentfilter"] = searchQuery;
+            ViewData["CurrentPage"] = page;
+            ViewData["TotalPages"] = totalPages;
+            ViewData["PageSize"] = pageSize;
+
             return View(posts);
         }
 

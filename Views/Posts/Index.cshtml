@@ -1,7 +1,11 @@
 ﻿@model IEnumerable<BlogSite.Models.Post>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Posts";
+    var currentPage = (int)ViewData["CurrentPage"];
+    var totalPages = (int)ViewData["TotalPages"];
+    var pageSize = (int)ViewData["PageSize"];
+    var searchQuery = ViewData["CurrentFilter"] as string;
 }
 
 <h1>Posts</h1>
@@ -9,7 +13,7 @@
 <!-- Search Form -->
 <form asp-action="Index" method="get" class="mb-3">
     <div class="input-group">
-        <input type="text" name="searchQuery" class="form-control" placeholder="Search posts..." value="@Context.Request.Query["searchQuery"]" />
+        <input type="text" name="searchQuery" class="form-control" placeholder="Search posts..." value="@searchQuery" />
         <button type="submit" class="btn btn-primary">Search</button>
     </div>
 </form>
@@ -26,66 +30,43 @@
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Author)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
+            <th>Title</th>
+            <th>Content</th>
+            <th>Image</th>
+            <th>Created At</th>
+            <th>Author</th>
+            <th>Category</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         @if (Model.Any())
         {
-            @foreach (var item in Model)
+            @foreach (var post in Model)
             {
                 <tr>
+                    <td>@post.Title</td>
+                    <td>@post.Content</td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Content)
-                    </td>
-                    <td>
-                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                        @if (!string.IsNullOrEmpty(post.ImageUrl))
                         {
-                            <img src="@item.ImageUrl" alt="Post Image" style="max-width: 100px; height: auto;" />
+                            <img src="@post.ImageUrl" alt="Post Image" style="max-width: 100px; height: auto;" />
                         }
                         else
                         {
                             <span>No Image</span>
                         }
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CreatedAt)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Author.FirstName)
-                        @Html.DisplayFor(modelItem => item.Author.LastName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Category.Name)
-                    </td>
+                    <td>@post.CreatedAt.ToString("MMMM dd, yyyy")</td>
+                    <td>@post.Author?.FirstName @post.Author?.LastName</td>
+                    <td>@post.Category?.Name</td>
                     <td>
                         @if (User.IsInRole("Admin"))
                         {
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+                            <a asp-action="Edit" asp-route-id="@post.Id" class="btn btn-sm btn-warning">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@post.Id" class="btn btn-sm btn-danger">Delete</a>
                         }
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Details</a>
+                        <a asp-action="Details" asp-route-id="@post.Id" class="btn btn-sm btn-info">Details</a>
                     </td>
                 </tr>
             }
@@ -98,3 +79,28 @@
         }
     </tbody>
 </table>
+
+<!-- Pagination Controls -->
+<div class="d-flex justify-content-center">
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <!-- Previous Page -->
+            <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-searchQuery="@searchQuery" asp-route-page="@(currentPage - 1)" asp-route-pageSize="@pageSize">Previous</a>
+            </li>
+
+            <!-- Page Numbers -->
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == currentPage ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-searchQuery="@searchQuery" asp-route-page="@i" asp-route-pageSize="@pageSize">@i</a>
+                </li>
+            }
+
+            <!-- Next Page -->
+            <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-searchQuery="@searchQuery" asp-route-page="@(currentPage + 1)" asp-route-pageSize="@pageSize">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
