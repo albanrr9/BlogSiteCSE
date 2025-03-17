@@ -1,0 +1,32 @@
+﻿@model IEnumerable<BlogSite.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "List Admins";
+}
+
+<h1>List of Admins</h1>
+
+@if (Model.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>User Name</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var admin in Model)
+            {
+                <tr>
+                    <td>@admin.UserName</td>
+                    <td>@admin.Email</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No admins found.</p>
+}

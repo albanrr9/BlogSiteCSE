@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogSite.Controllers
 {
@@ -51,6 +52,24 @@ namespace BlogSite.Controllers
                 ModelState.AddModelError("", error.Description);
             }
             return View();
+        }
+        [Authorize(Roles ="Admin")]
+        public async Task<IActionResult> ListAdmins()
+        {
+            // Get all users
+            var users = await _userManager.Users.ToListAsync();
+
+            // Filter users with the Admin role
+            var adminUsers = new List<ApplicationUser>();
+            foreach (var user in users)
+            {
+                if (await _userManager.IsInRoleAsync(user, "Admin"))
+                {
+                    adminUsers.Add(user);
+                }
+            }
+
+            return View(adminUsers);
         }
     }
 }
