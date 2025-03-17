@@ -17,7 +17,6 @@ namespace BlogSite.Controllers
     {
         private readonly AppDbContext _context;
         public readonly UserManager<ApplicationUser> _userManager;
-        //ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id", post.AuthorId);
         public PostsController(AppDbContext context,UserManager<ApplicationUser> userManager)
         {
             _context = context;
@@ -25,13 +24,23 @@ namespace BlogSite.Controllers
         }
 
         // GET: Posts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchQuery)
         {
-            var posts = await _context.Posts
+            var postsQuery = _context.Posts
                 .Include(p => p.Author)
-                .Include(x => x.Category)
+                .Include(p => p.Category)
                 .OrderByDescending(p => p.CreatedAt)
-                .ToListAsync();
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                postsQuery = postsQuery.Where(p =>
+                p.Title.Contains(searchQuery) ||
+                p.Content.Contains(searchQuery) ||
+                p.Category.Name.Contains(searchQuery));
+            }
+
+            var posts = await postsQuery.ToListAsync();
             return View(posts);
         }
 
