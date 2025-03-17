@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Add Admin";
+}
+
+<h1>Add Admin</h1>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-success">@ViewBag.Message</div>
+}
+
+<form asp-action="AddAdmin" method="post">
+    <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" class="form-control" placeholder="Enter user's email" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Add Admin</button>
+</form>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p>@error.ErrorMessage</p>
+        }
+    </div>
+}
