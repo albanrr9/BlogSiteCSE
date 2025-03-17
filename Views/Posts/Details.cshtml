@@ -1,0 +1,69 @@
+﻿@model BlogSite.Models.Post
+
+@{
+    ViewData["Title"] = "Post Details";
+}
+
+<h1>@Model.Title</h1>
+
+<div>
+    <p><strong>Author:</strong> @Model.Author.UserName</p>
+    <p><strong>Created At:</strong> @Model.CreatedAt.ToString("MMMM dd, yyyy")</p>
+
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <img src="@Model.ImageUrl" alt="Post Image" class="img-fluid mb-3" style="max-width: 100%; height: auto;" />
+    }
+
+    <div>
+        <h4>Content</h4>
+        <p>@Html.Raw(Model.Content)</p>
+    </div>
+</div>
+
+<hr />
+
+<h3>Comments</h3>
+
+@if (Model.Comments.Any())
+{
+    <ul class="list-unstyled">
+        @foreach (var comment in Model.Comments)
+        {
+            <li class="mb-3 border-bottom pb-2">
+                <div>
+                    <strong>@comment.User.UserName</strong>
+                    <small class="text-muted">@comment.CreatedAt.ToString("MMMM dd, yyyy")</small>
+                </div>
+                <p>@comment.Content</p>
+                @if (comment.UserId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+                {
+                    <form asp-controller="Comments" asp-action="Delete" asp-route-id="@comment.Id" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                }
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No comments yet. Be the first to comment!</p>
+}
+
+<hr />
+
+<h3>Add a Comment</h3>
+<form asp-controller="Comments" asp-action="Create" method="post">
+    <input type="hidden" name="postId" value="@Model.Id" />
+    <div class="form-group">
+        <label for="content" class="control-label">Your Comment</label>
+        <textarea name="content" class="form-control" rows="3" placeholder="Write your comment here..." required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-secondary">Edit Post</a> |
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>
