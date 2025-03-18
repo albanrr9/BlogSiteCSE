@@ -64,6 +64,7 @@ namespace BlogSite.Controllers
                 .Include(p => p.Author)
                 .Include(x => x.Category)
                 .Include(c => c.Comments)
+                    .ThenInclude(c => c.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (post == null)
             {
