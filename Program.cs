@@ -57,6 +57,7 @@ using (var scope = app.Services.CreateScope())
         }
     }
 }
+
 app.UseHttpsRedirection();
 app.UseRouting();
 
@@ -68,7 +69,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Posts}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 
