@@ -25,7 +25,7 @@ namespace BlogSite.Controllers
             {
                 var result = await _signInManager.PasswordSignInAsync(loginVM.Email, loginVM.Password,loginVM.RememberMe,false);
                 if (result.Succeeded)
-                    return RedirectToAction("Index", "Posts");
+                    return RedirectToAction("Index", "Home");
 
                 ModelState.AddModelError("", "Invalid login attempt");
             }
@@ -37,7 +37,7 @@ namespace BlogSite.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
@@ -54,7 +54,7 @@ namespace BlogSite.Controllers
                 {
                     await _userManager.AddToRoleAsync(user, "User");
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Posts");
+                    return RedirectToAction("Index", "Home");
                 }
                 foreach(var error in result.Errors)
                 {
