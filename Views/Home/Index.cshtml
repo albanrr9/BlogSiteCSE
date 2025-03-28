@@ -1,8 +1,56 @@
-﻿@{
+﻿@model IEnumerable<BlogSite.Models.Post>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>Read the latest posts in our blog.</p>
+</div>
+
+<div class="container">
+    <div class="row">
+        @if (Model.Any())
+        {
+            @foreach (var post in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <a class="card-link" asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id">
+                        <div class="card h-100">
+                            @if (!string.IsNullOrEmpty(post.ImageUrl))
+                            {
+                                <img src="@post.ImageUrl" class="card-img-top" alt="Post Image" style="height: 200px; object-fit: cover;">
+                            }
+                            <div class="card-body">
+                                <h5 class="card-title">@post.Title</h5>
+                                <p class="card-text">@(post.Content.Length > 50 ? post.Content.Substring(0, 50) + "..." : post.Content)</p>
+                                <div class="cardfooter">
+                                    <p class="badge bg-danger">@post.Category?.Name</p>
+                                    <p class="text-muted author-date"><small>By @post.Author?.FirstName @post.Author?.LastName</small><small>@post.CreatedAt.ToString("ddd, d/MM/yyyy, H:mm")</small></p>
+                                </div>
+                            </div>
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <div class="card-footer text-end">
+
+                                    <a asp-action="Edit" asp-route-id="@post.Id" class="btn btn-sm btn-warning">Edit</a>
+                                    <form asp-action="Delete" asp-route-id="@post.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    </a>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center">
+                <p>No posts found.</p>
+            </div>
+        }
+    </div>
 </div>

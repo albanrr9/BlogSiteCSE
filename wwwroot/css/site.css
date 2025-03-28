@@ -29,3 +29,68 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+.navbar > .container-fluid {
+    max-width: 1200px;
+}
+
+@media (min-width: 1400px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+        max-width: 1200px;
+    }
+}
+
+.navbar-toggler {
+    border: none;
+    box-shadow:none;
+    &:focus {
+                box-shadow: none;
+            }
+}
+
+.card-link {
+    text-decoration: none;
+}
+
+.post-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.post-image-detail {
+    width: 30vw;
+    height: auto;
+    align-self: center;
+}
+
+.card-body {
+    display: flex !important;
+    flex-direction: column;
+}
+
+.author-date {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0;
+}
+
+.cardfooter {
+    justify-self: flex-end !important;
+    margin-top: auto;
+}
+
+@media (min-width: 768px) {
+    .card {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+}
+
+
+
+header {
+    background-color: #0e1217;
+}
