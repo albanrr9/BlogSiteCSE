@@ -47,3 +47,50 @@ body {
                 box-shadow: none;
             }
 }
+
+.card-link {
+    text-decoration: none;
+}
+
+.post-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.post-image-detail {
+    width: 30vw;
+    height: auto;
+    align-self: center;
+}
+
+.card-body {
+    display: flex !important;
+    flex-direction: column;
+}
+
+.author-date {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0;
+}
+
+.cardfooter {
+    justify-self: flex-end !important;
+    margin-top: auto;
+}
+
+@media (min-width: 768px) {
+    .card {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+}
+
+
+
+header {
+    background-color: #0e1217;
+}

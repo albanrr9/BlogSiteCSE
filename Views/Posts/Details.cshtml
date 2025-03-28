@@ -6,13 +6,13 @@
 
 <h1>@Model.Title</h1>
 
-<div>
+<div class="post-details">
     <p><strong>Author:</strong> @Model.Author.UserName</p>
-    <p><strong>Created At:</strong> @Model.CreatedAt.ToString("MMMM dd, yyyy")</p>
+    <p><strong>Created At:</strong> @Model.CreatedAt.ToString("MMMM dd, yyyy, h:mm")</p>
 
     @if (!string.IsNullOrEmpty(Model.ImageUrl))
     {
-        <img src="@Model.ImageUrl" alt="Post Image" class="img-fluid mb-3" style="max-width: 100%; height: auto;" />
+        <img src="@Model.ImageUrl" alt="Post Image" class="img-fluid mb-3 post-image-detail" style="max-width: 100%; height: auto;" />
     }
 
     <div>
